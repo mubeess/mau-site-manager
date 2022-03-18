@@ -1,10 +1,21 @@
+.mainAppp{
+  min-height: 100vh;
+  width: 100%;
+}
+.mainAppp .buttonsMenu{
+  height: 100px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
 .mainContainer{
   width: 100%;
   min-height: 100vh;
   background-color: #f9f9f9;
 }
-
-.mainContainer .nav{
+ .nav{
   min-height: 100px;
   width: 100%;
   background-color: #356c7d;
@@ -12,8 +23,7 @@
   justify-content: flex-end;
   align-items: center;
 }
-
-.mainContainer .nav h4{
+ .nav h4{
   color: white;
   margin-right: auto;
   margin-left: 20px;
@@ -108,4 +118,79 @@ font-weight: bold;
       width: 100px;
       height: 100px;
       border-radius: 50%;
+    }
+
+    .newsEvent{
+      min-height: 50vh;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 20px;
+      background-color: white;
+      border-radius: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 20px;
+    }
+   
+
+
+.newsEvent .txt{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      border-bottom: 0.5px solid #f9f9f9;
+    }
+.newsEvent .txt h3{
+    font-size: 25px;
+    background-color: #f9f9f9;
+    text-align: center;
+    width: 80%;
+    margin: auto;
+    margin-top: 10px;
+    font-weight: bold;
+    }
+    
+.newsEvent .txt h4{
+      font-size: 20px;
+      background-color: #f9f9f9;
+      text-align: center;
+      width: 80%;
+      margin: auto;
+      margin-top: 10px;
+      }
+  .newsEvent .txt p{
+        background-color: #f9f9f9;
+        text-align: center;
+        width: 80%;
+        margin: auto;
+        margin-top: 10px;
+      
+        }
+    .newsEvent .txt img{
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+         
+        }
+    .newsEvent .program{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+      border-bottom: 0.5px solid #f9f9f9;
+    }
+    .footer{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+    .footer h3{
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      width: 100%;
+      text-align: center;
     }

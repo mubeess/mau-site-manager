@@ -123,14 +123,14 @@ export default function Home() {
                 {rec.image?<img src={rec.image}/>:<h4>No Image Data</h4>}
                 <h3>Sub Heading</h3>
                <Input onChange={(txt)=>{
-                 setHeadr(txt.target.value)
+                 setTitle(txt.target.value)
                }} style={{
                    marginTop:5,
                    width:'70%'
                }} placeholder={`${rec.subHeader}`}/>
                 <h4>Title</h4>
                 <Input onChange={(txt)=>{
-                 setTitle(txt.target.value)
+                 setHeadr(txt.target.value)
                }} style={{
                    marginTop:5,
                    width:'70%'
@@ -178,11 +178,12 @@ export default function Home() {
                 eventId:rec.evntId,
                 eventName:'mainEvents',
                 evnt:{
-                    header:title?title:homeData[0].header,
-                    subHeader:header?header:homeData[0].subHeader,
-                    description:desc?desc:homeData[0].description
+                    header:header!==''?header:rec.header,
+                    subHeader:title!==''?title:rec.subHeader,
+                    description:desc!==''?desc:rec.description
                 }
             }
+           
           
             fetch('https://new-modibbo-adama.herokuapp.com/admin/edit-homepage-event',{
                 method:'PUT',
@@ -196,6 +197,9 @@ export default function Home() {
                   .then(data=>{
                      loadData()
                      console.log(data)
+                     setDesc('')
+                     setTitle('')
+                     setHeadr('')
                      message.success('doneeeeeee')
                   })
               })
@@ -304,7 +308,7 @@ export default function Home() {
 <h4>Vc's Name</h4>
 <Input onChange={(txt)=>{
   setHeadr(txt.target.value)
-}} style={{width:'70%'}} placeholder={homeData[0].vc.header}/>
+}} style={{width:'70%'}} placeholder={homeData[0].vc.name}/>
 <h4>Vc's Message</h4>
 <TextArea onChange={(txt)=>{
   setDesc(txt.target.value)
@@ -314,12 +318,13 @@ export default function Home() {
     eventId:homeData[0].vc.evntId,
     eventName:'vc',
     evnt:{
-        header:header,
+        name:header!==''?header:homeData[0].vc.name,
         subHeader:'',
-        description:desc
+        description:desc!==''?desc:homeData[0].vc.description,
+        header:''
     }
 }
-console.log(myObj)
+
 fetch('https://new-modibbo-adama.herokuapp.com/admin/edit-homepage-event',{
     method:'PUT',
     headers:{
@@ -331,6 +336,8 @@ fetch('https://new-modibbo-adama.herokuapp.com/admin/edit-homepage-event',{
       res.json()
       .then(data=>{
          loadData()
+         setDesc('')
+         setHeadr('')
          message.success('doneeeeeee')
       })
   })
@@ -353,12 +360,16 @@ fetch('https://new-modibbo-adama.herokuapp.com/admin/edit-homepage-event',{
                 <div key={ind} className='txt'>
                 {rec.image?<img src={rec.image}/>:<h4>No Image Data</h4>}
                 <h4>Title</h4>
-                <Input style={{
+                <Input onChange={(txt)=>{
+                  setHeadr(txt.target.value)
+                }} style={{
                    marginTop:5,
                    width:'70%'
                }} placeholder={`${rec.header}`}/>
                 <p>News Body</p>
-                <TextArea style={{
+                <TextArea onChange={(txt)=>{
+                  setDesc(txt.target.value)
+                }} style={{
                    marginTop:5,
                    width:'70%',
                    marginBottom:10
@@ -389,8 +400,47 @@ fetch('https://new-modibbo-adama.herokuapp.com/admin/edit-homepage-event',{
                }} style={{
                  color:'red',
                  fontSize:20,
-                 cursor:'pointer'
+                 cursor:'pointer',
+                 marginBottom:20
                }}/>
+
+
+<Button onClick={()=>{
+              const myObj={
+                eventId:rec.evntId,
+                eventName:'newsEvents',
+                evnt:{
+                    header:header!==''?header:rec.header,
+                    subHeader:'',
+                    description:desc!==''?desc:rec.description
+                }
+            }
+           
+            console.log(myObj)
+          
+            fetch('https://new-modibbo-adama.herokuapp.com/admin/edit-homepage-event',{
+                method:'PUT',
+                headers:{
+                  "Content-Type":'application/json'
+                },
+                body:JSON.stringify(myObj)
+              })
+              .then(res=>{
+                  res.json()
+                  .then(data=>{
+                     loadData()
+                     console.log(data)
+                     setDesc('')
+                     setTitle('')
+                     setHeadr('')
+                     message.success('doneeeeeee')
+                  })
+              })
+
+
+               }} type='primary'>Save Edited Text</Button>
+
+
             </div>
              )):(
                  <div>
@@ -422,7 +472,9 @@ fetch('https://new-modibbo-adama.herokuapp.com/admin/edit-homepage-event',{
              homeData.length>0?homeData[0].programs.map((rec,ind)=>(
                 <div key={ind} className='program'>
                 <h4>Event</h4>
-                <TextArea style={{
+                <TextArea onChange={(txt)=>{
+                  setDesc(txt.target.value)
+                }} style={{
                    width:'70%',
                    marginBottom:10
                }} placeholder={`${rec.description}`}/>
@@ -452,8 +504,42 @@ fetch('https://new-modibbo-adama.herokuapp.com/admin/edit-homepage-event',{
                }} style={{
                  color:'red',
                  fontSize:20,
-                 cursor:'pointer'
+                 cursor:'pointer',
+                 marginBottom:20
                }}/>
+               <Button onClick={()=>{
+              const myObj={
+                eventId:rec.evntId,
+                eventName:'programs',
+                evnt:{
+                    header:'',
+                    subHeader:'',
+                    description:desc!==''?desc:rec.description
+                }
+            }
+           
+        
+          
+            fetch('https://new-modibbo-adama.herokuapp.com/admin/edit-homepage-event',{
+                method:'PUT',
+                headers:{
+                  "Content-Type":'application/json'
+                },
+                body:JSON.stringify(myObj)
+              })
+              .then(res=>{
+                  res.json()
+                  .then(data=>{
+                     loadData()
+                     setDesc('')
+                     setTitle('')
+                     setHeadr('')
+                     message.success('doneeeeeee')
+                  })
+              })
+
+
+               }} type='primary'>Save Edited Text</Button>
             </div>
              )):(
                  <div>

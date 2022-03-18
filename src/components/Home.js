@@ -239,14 +239,14 @@ export default function Home() {
      {
        eventType=='mainEvents'?(
         <Input value={title} onChange={(txt)=>{
-          setHeadr(txt.target.value)
+          setTitle(txt.target.value)
       }}  placeholder='Enter Sub-header'/>
        ):null
      }
      {
        eventType=='mainEvents'||eventType=='newsEvents'?(
         <Input value={header} onChange={(txt)=>{
-          setTitle(txt.target.value)
+          setHeadr(txt.target.value)
       }} style={{marginTop:20}} placeholder='Enter Title'/>
        ):null
      }
@@ -258,8 +258,8 @@ export default function Home() {
        <Button onClick={()=>{
           const myObj={
               evnt:{
-                  header:title,
-                  subHeader:header,
+                  header:header,
+                  subHeader:title,
                   description:desc
               },
               homeEventType:eventType
@@ -274,10 +274,18 @@ export default function Home() {
             .then(res=>{
                 res.json()
                 .then(data=>{
-                  loadData()
-                  handleCancel()
-                  setDesc('')
-                   message.success('doneeeeeee')
+                  if (eventType=='mainEvents'||eventType=='newsEvents') {
+                    setUploadOpt(data.newlyEvent.evntId)
+                    message.success('Upload An Image')
+                  }else{
+                    loadData()
+                    setDesc('')
+                    handleCancel()
+                    message.success('doneeeeeee')
+                  }
+                  
+                 
+                   
                 })
             })
       

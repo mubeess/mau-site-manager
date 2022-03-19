@@ -299,10 +299,20 @@ export default function Faculty() {
                     {
                         singFac[0].dean!==null&&(
                             <>
-                            {singFac[0].dean.image?(<img src={singFac[0].dean.image}/>):(
+                            {singFac[0].dean.image?(
+                            <>
+                            <img src={singFac[0].dean.image}/>
+                            <Upload {...props}>
+                         <Button type='primary' style={{
+                                marginTop:10,
+                                marginBottom:10
+                            }}  icon={<UploadOutlined />}>Change Dean Image</Button>
+                           </Upload>
+                            </>
+                            ):(
                                 <>
                                 <h4>No Image</h4>
-                                <Upload  {...props}>
+ <Upload  {...props}>
     <Button icon={<UploadOutlined />}>Click to Upload an Image</Button>
 </Upload>
                                 </>

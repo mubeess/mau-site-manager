@@ -19,7 +19,9 @@ export default function Faculty() {
     const [facId,setFacId]=useState('')
     const {TextArea}=Input
     const {Option}=Select
-
+    const [deanNameEdit,setDeanNameEdit]=useState('')
+    const [deanQualEdit,setDeanQualEdit]=useState('')
+    const [facDescEdit,setFacEdit]=useState('')
     const showModal = () => {
         setIsModalVisible(true);
       };
@@ -106,6 +108,7 @@ export default function Faculty() {
                 .then(data => {
                     console.log(data)
                     setLoading(false)
+                    setLoading2(false)
                     setList(data.message)
                 })
         }).catch(err=>{
@@ -266,6 +269,7 @@ export default function Faculty() {
                          .then(data => {
                              setLoading2(false)
                              setSinFac([data.message])
+                             console.log(data)
                              
                          })
                  }).catch(err=>{
@@ -317,8 +321,55 @@ export default function Faculty() {
 </Upload>
                                 </>
                             )}
-                            <Input disabled placeholder={'Name:'+singFac[0].dean.name}/>
-                            <Input disabled placeholder={singFac[0].dean.qualification.map(ql=>ql+',')}/>
+                            <Input style={{
+                                marginBottom:10
+                            }} placeholder={`Name: ${singFac[0].dean.name}`} value={deanNameEdit} onChange={(txt)=>{
+                                setDeanNameEdit(txt.target.value)
+                            }}/>
+                            <Input placeholder={`Qualifications: ${singFac[0].dean.qualification.map(ql=>ql+',')}`} value={deanQualEdit} onChange={(txt)=>{
+                                setDeanQualEdit(txt.target.value)
+                            }}/>
+                            <Button onClick={()=>{
+                          const myNewObj=deanQualEdit.split(',')
+                                const myObj={
+                                    dean: {
+                                        name:deanNameEdit==''?singFac[0].dean.name:deanNameEdit,
+                                        qualification:deanQualEdit==''?singFac[0].dean.qualification:myNewObj,
+                                        message: ""
+                                    }
+                                }
+                               setLoading2(true)
+
+                                fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-dean?facultyId=${singFac[0].facultyId}`,{
+                                    method:'PUT',
+                                    headers:{
+                                    "Content-Type":'application/json'
+                                    },
+                                    body:JSON.stringify(myObj)
+                                })
+                                .then(res=>{
+                                    res.json()
+                                    .then(data=>{
+                                        fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-faculty?facultyId=${singFac[0].facultyId}`)
+                                        .then(res => {
+                                            res.json()
+                                                .then(data => {
+                                                    setLoading2(false)
+                                                    setSinFac([data.message])
+                                                    
+                                                    
+                                                })
+                                        }).catch(err=>{
+                                            
+                                        })
+                                        console.log(data)
+                                    setFname('')
+                                        message.success('successfuly edited!')
+                                    })
+                                })
+
+
+                            }} style={{marginTop:10}} type='primary'>Save Edited Text</Button>
                             </>
                         )
                     }
@@ -383,6 +434,56 @@ export default function Faculty() {
                             </div>
                         ))
                     }
+                {
+                    singFac[0].departmentList.length==0&&(
+                        <h2>No Department Added</h2>
+                    )
+                }
+
+                <h4>Faculty Description</h4>
+                <TextArea onChange={(txt)=>{
+                    setFacEdit(txt.target.value)
+                }} value={facDescEdit} placeholder={singFac[0].facultyDescription}/>
+                <Button onClick={()=>{
+                                const myObj={
+                                    faculty: {
+                                        facultyDescription:facDescEdit 
+                                    }
+                                }
+                               setLoading2(true)
+                               setLoading(true)
+
+                                fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-faculty?facultyId=${singFac[0].facultyId}`,{
+                                    method:'PUT',
+                                    headers:{
+                                    "Content-Type":'application/json'
+                                    },
+                                    body:JSON.stringify(myObj)
+                                })
+                                .then(res=>{
+                                    res.json()
+                                    .then(data=>{
+                                        fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-faculty?facultyId=${singFac[0].facultyId}`)
+                                        .then(res => {
+                                            res.json()
+                                                .then(data => {
+                                                    
+                                                    setSinFac([data.message])
+                                                    loadData()
+                                                    
+                                                    
+                                                })
+                                        }).catch(err=>{
+                                            
+                                        })
+                                        console.log(data)
+                                    setFname('')
+                                        message.success('successfuly edited!')
+                                    })
+                                })
+
+
+                            }} style={{marginTop:10}} type='primary'>Save Edited Text</Button>
                     </>
                     )
                 }

@@ -392,7 +392,9 @@ export default function Faculty() {
                     {
                         singFac[0].departmentList.map((dpt,ind)=>(
                             <div className='editFac' key={ind}>
-                                <Input disabled placeholder={dpt.departmentName}/>
+                                <Input onChange={(txt)=>{
+                                    console.log(dpt)
+                                }} placeholder={dpt.departmentName}/>
                                 <DeleteOutlined onClick={()=>{
                  const confirm=window.confirm('Are You Sure?')
                  if (confirm) {

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import Nav from './components/Nav';
 import Faculty from './components/Faculty';
+import Department from './components/Department';
 
 function App() {
   const [currIndex,setCurr]=useState(0)
@@ -38,7 +39,11 @@ function App() {
           <Faculty/>
         )
       }
-   
+      {
+        currIndex==2&&(
+          <Department/>
+        )
+      }
     </div>
    
   );

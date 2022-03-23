@@ -28,6 +28,8 @@ export default function Department() {
     const [programName2,setProgName2]=useState('')
     const [programMission2,setProgMission2]=useState('')
     const [progReq2,setProgReq2]=useState('')
+    const [depNameEdit,setDepNameEdit]=useState('')
+    const [depVision2,setDepVision2]=useState('')
 
 
     const props = {
@@ -199,6 +201,64 @@ export default function Department() {
                 }
                 
                 </Select>
+              <div style={{marginTop:10}} className='addStaff'>
+             {
+                 filteredDep.length>0&&(
+                     <>
+                <Input value={depNameEdit} onChange={(txt)=>{
+                    setDepNameEdit(txt.target.value)
+                }} placeholder={filteredDep[0].departmentName}/>
+               <TextArea value={depVision2} onChange={(txt)=>{
+                    setDepVision2(txt.target.value)
+                }} style={{marginTop:10}} placeholder={filteredDep[0].vission}/>
+               <Button onClick={()=>{
+          const myObj={
+            department: {
+                departmentName:depNameEdit==''?filteredDep[0].departmentName:depNameEdit,
+                vission:depVision2==''?filteredDep[0].vission:depVision2,
+                mission:''
+            }
+          }
+          fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-department?departmentId=${filteredDep[0].departmentId}`,{
+              method:'PUT',
+              headers:{
+                "Content-Type":'application/json'
+              },
+              body:JSON.stringify(myObj)
+            })
+            .then(res=>{
+                res.json()
+                .then(data=>{
+                    fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].departmentId:''}`)
+                                        .then(res => {
+                                            res.json()
+                                                .then(data => {
+                                                    setDepNameEdit('')
+                                                    setDepVision2('')
+                                                    setFilteredDep(data.message)
+                                                    loadData()
+                                                    message.success('successfuly added!')
+                                                   
+                                                })
+                                        })
+                   
+                })
+            })
+            .catch(err=>{
+                console.log(err)
+            })
+      
+       }} type='primary' style={{marginTop:10}}>Save Edited Text</Button>
+                     </>
+                 )
+             }
+             {
+                 filteredDep.length==0&&(
+                     <h2>Please Select Department.</h2>
+                 )
+             }
+              </div>
+            
            </div>
             {
                    loading&&(
@@ -373,9 +433,9 @@ export default function Department() {
 
 
                             }} style={{marginTop:10}} type='primary'>Add Program</Button>
-                    <Upload  {...props2}>
+                    {/* <Upload  {...props2}>
         <Button icon={<UploadOutlined />}>Upload Brochure</Button>
-                </Upload>
+                </Upload> */}
 
                     </div>
                     </div>

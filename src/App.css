@@ -1,3 +1,15 @@
+@keyframes rotate {
+  0%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+  
+}
+body{
+  font-family: 'Poppins', sans-serif;
+}
 .mainAppp{
   min-height: 100vh;
   width: 100%;
@@ -194,3 +206,22 @@ font-weight: bold;
       width: 100%;
       text-align: center;
     }
+    .loadingPage{
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.5s;
+    }
+    .loadingPage img{
+      height: 100px;
+      width: 100px;
+      animation: rotate 5s infinite reverse;
+    }
+    

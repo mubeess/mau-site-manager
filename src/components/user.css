@@ -1,0 +1,47 @@
+.usersCont{
+    min-height: 80vh;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #f9f9f9;
+    border-radius: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 30px;
+}
+.usersCont .userCard{
+background-color: white;
+width: 80%;
+min-height: 200px;
+max-height: 200px;
+border-radius: 20px;
+margin-left: auto;
+margin-right: auto;
+margin-top: 20px;
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+display: flex;
+flex-direction: row;
+}
+.userCard .imgDet{
+    width:35%;
+    height:100%;
+    background-color:transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.imgDet img{
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+}
+.userCard .txtDet{
+    width: 65%;
+    height: 100%;
+    background-color: transparent;
+    display:flex;
+    flex-direction: column;
+    padding: 20px;
+    align-items: center;
+}

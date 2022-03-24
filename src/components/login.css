@@ -1,0 +1,57 @@
+.logInCont{
+    width: 100%;
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+}
+.logInCont .mainLog{
+    width: 40%;
+    height: 100vh;
+    background-color:white;
+    display: flex;
+    flex-direction: column;
+}
+.logInCont .logStyle{
+    width: 60%;
+    height: 100vh;
+    background:url('../assets/gate.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.mainLog .logDec{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}
+.logDec img{
+    height: 100px;
+    width: 100px;
+}
+.logDec h1{
+    font-weight: bold;
+    font-family: 'Palette Mosaic', cursive;
+    font-size: 50px;
+}
+.mainLog h2{
+    text-align: center;
+    font-weight: lighter;
+    margin-right: auto;
+    margin-left: auto;
+    color: rgba(0, 0, 0, 0.5);
+}
+.mainLog h3{
+    text-align: center;
+    margin-top: 30px;
+}
+.mainLog p{
+    text-align: center;
+    margin-top: 10px;
+    color: rgba(0, 0, 0, 0.5);
+}

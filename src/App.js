@@ -8,6 +8,7 @@ import Faculty from './components/Faculty';
 import Department from './components/Department';
 import Login from './components/Login';
 import Users from './components/Users';
+import Profile from './components/Profile';
 
 function App() {
   const [currIndex,setCurr]=useState(0)
@@ -50,7 +51,7 @@ function App() {
           setCurr(3)
         }} type={currIndex==3?'primary':'default'}>Users</Button>
             <Button onClick={()=>{
-          setCurr(2)
+          setCurr(4)
         }} type={currIndex==4?'primary':'default'}>Profile</Button>
       </div>
       {
@@ -71,6 +72,11 @@ function App() {
       {
         currIndex==3&&(
           <Users/>
+        )
+      }
+      {
+        currIndex==4&&(
+          <Profile/>
         )
       }
     </div>

@@ -53,7 +53,7 @@ export default function Users() {
                         user.image!='null'?<img src={user.image} alt='user'/>:<Avatar size={64} icon={<UserOutlined />} />
                     }
                  
-                   <h4>{user.address.toUpperCase()}</h4>
+                   <h4>ROLE</h4>
                    <Rate allowHalf disabled defaultValue={user.address=='super'?4.5:2.5} />
                     </div>
                     <div className='txtDet'>
@@ -157,3 +157,5 @@ export default function Users() {
         </div>
     )
 }
+
+// .toUpperCase()

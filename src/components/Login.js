@@ -52,7 +52,7 @@ export default function Login(props) {
                                 window.sessionStorage.setItem('mau-user',JSON.stringify(data.newUser))
                                 message.success('Logged In Successfuly!')
                                 props.setLoading(false)
-                                props.setIslogged()
+                                props.setIslogged(data.newUser)
                                 notification.open({
                                     message: 'Succesfully Logged In',
                                     description:'Logged as Super-Admin',

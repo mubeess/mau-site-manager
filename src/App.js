@@ -11,15 +11,15 @@ import Users from './components/Users';
 import Profile from './components/Profile';
 
 function App() {
-  const [currIndex,setCurr]=useState(0)
+  const [currIndex,setCurr]=useState(4)
   const [isLogged,setIslogged]=useState(true)
   const [isloading,setLoading]=useState(true)
+  const [user,setUser]=useState(JSON.parse(window.sessionStorage.getItem('mau-user')))
   useEffect(()=>{
-  const user=window.sessionStorage.getItem('mau-user')
   if(user==null){
   setIslogged(false)
   setLoading(false)
-  console.log(user)
+  
   }else{
     setIslogged(true)
     setLoading(false)
@@ -27,8 +27,15 @@ function App() {
   }
   setLoading(false)
   },[])
-  const setIs=()=>{
+  const setIs=(usr)=>{
     setIslogged(true)
+    setUser(usr)
+  }
+
+  const setOut=()=>{
+    setIslogged(false)
+    window.sessionStorage.setItem('mau-user',null)
+    setUser(null)
   }
   return (
     <>
@@ -36,11 +43,11 @@ function App() {
       !isloading&&
        isLogged==true?(
         <div className='mainAppp'>
-      <Nav/>
+      <Nav loading={setLoading} setOut={setOut}/>
       <div className='buttonsMenu'>
-        <Button onClick={()=>{
-          setCurr(0)
-        }} type={currIndex==0?'primary':'default'}>Home Page</Button>
+            <Button onClick={()=>{
+              setCurr(0)
+            }} type={currIndex==0?'primary':'default'}>Home Page</Button>
         <Button onClick={()=>{
           setCurr(1)
         }} type={currIndex==1?'primary':'default'}>Faculty</Button>

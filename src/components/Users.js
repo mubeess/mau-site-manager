@@ -204,7 +204,13 @@ export default function Users() {
               .then(data=>{
               message.success('Created successfully')
               loadData()
-              console.log(data)
+              setLName('')
+              setFName('')
+              setPhone('')
+              setRole('none')
+              setMail('')
+              handleCancel()
+
                  
               })
           })

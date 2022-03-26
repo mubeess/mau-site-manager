@@ -10,7 +10,7 @@ export default function Users() {
     const [lName,setLName]=useState('')
     const [phone,setPhone]=useState('')
     const [mail,setMail]=useState('')
-    const [role,setRole]=useState('')
+    const [role,setRole]=useState('none')
     const userr=JSON.parse(window.sessionStorage.getItem('mau-user'))
     const showModal = () => {
         setIsModalVisible(true);
@@ -53,14 +53,51 @@ export default function Users() {
                         user.image!='null'?<img src={user.image} alt='user'/>:<Avatar size={64} icon={<UserOutlined />} />
                     }
                  
-                   <h4>ROLE</h4>
-                   <Rate allowHalf disabled defaultValue={user.address=='super'?4.5:2.5} />
+                   <h4>{user.role!='null'?user.role.toUpperCase():'No Role Set'}</h4>
+                   <Rate allowHalf disabled defaultValue={user.role=='super'?4.5:2.5} />
                     </div>
                     <div className='txtDet'>
-                      <Input disabled value={"First Name: "+user.firstName} />
-                      <Input disabled value={"Last Name: "+user.lastName} />
+                      <Input disabled value={"Name: "+user.firstName+" "+user.lastName} />
                       <Input disabled value={"Phone: "+user.phone} />
                       <Input disabled value={"Email: "+user.username}/>
+                      <div style={{
+                          width:'100%'
+                      }}>
+                      <Select style={{marginTop:5,width:'60%'}} defaultValue="none" onChange={(val)=>{
+              setRole(val)
+        }}>
+      <Option value="none">---Set Role---</Option>
+      <Option value="super">Super Admin</Option>
+      <Option value="admin">Admin</Option>
+      <Option value="staff">Staff</Option>
+      </Select>
+      <Button onClick={()=>{
+    const myObj={
+       staff:{
+        role
+        
+       }
+       
+    }
+    fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-staff?username=${user.username}`,{
+        method:'PUT',
+        headers:{
+          "Content-Type":'application/json'
+        },
+        body:JSON.stringify(myObj)
+      })
+      .then(res=>{
+          res.json()
+          .then(data=>{
+          message.success('Role set successfully')
+          setRole('none')
+          loadData()
+         
+             
+          })
+      })
+}} style={{marginLeft:10}} type='primary' size='small'>Set Role</Button>
+                      </div>
                       <div style={{
                           padding:10,
                           width:'70%',
@@ -68,7 +105,28 @@ export default function Users() {
                           flexDirection:'row',
                           justifyContent:'space-around'
                                                 }}>
-                      <DeleteOutlined style={{
+                      <DeleteOutlined onClick={()=>{
+                          const confirmed=window.confirm('Are You Sure?')
+                          if (confirmed) {
+                            fetch(`https://new-modibbo-adama.herokuapp.com/admin/remove-staff?username=${user.username}`,{
+                                method:'DELETE',
+                                headers:{
+                                  "Content-Type":'application/json'
+                                }
+                              })
+                              .then(res=>{
+                                  res.json()
+                                  .then(data=>{
+                                  message.success('Deleted successfully')
+                                  loadData()
+                                  
+                                     
+                                  })
+                              })
+                              
+                          }
+                            
+                      }} style={{
                           fontSize:20,
                           color:'red',
                           cursor:'pointer'
@@ -129,8 +187,9 @@ export default function Users() {
                 firstName:fName,
                 lastName: lName,
                 phone: phone,
-                address:role,
-                gender: ""
+                role:role,
+                gender: "",
+                address:''
         
           }
           fetch('https://new-modibbo-adama.herokuapp.com/admin/register-staff',{

@@ -30,6 +30,7 @@ export default function Department() {
     const [progReq2,setProgReq2]=useState('')
     const [depNameEdit,setDepNameEdit]=useState('')
     const [depVision2,setDepVision2]=useState('')
+    const [progId,setProgId]=useState('')
 
 
     const props = {
@@ -75,8 +76,8 @@ export default function Department() {
 
 
       const props2 = {
-        name: 'profile_pic',
-        action: `https://new-modibbo-adama.herokuapp.com/admin/upload-an-image?activity=program&departmentId=${filteredDep.length>0?filteredDep[0].departmentId:''}`,
+        name: 'file',
+        action: `https://new-modibbo-adama.herokuapp.com/admin/add-program-brochure?programId=${progId}&departmentId=${filteredDep.length>0?filteredDep[0].departmentId:''}`,
         headers: {
           authorization: 'authorization-text',
         },
@@ -207,10 +208,10 @@ export default function Department() {
                      <>
                 <Input value={depNameEdit} onChange={(txt)=>{
                     setDepNameEdit(txt.target.value)
-                }} placeholder={filteredDep[0].departmentName}/>
+                }} placeholder={"Department Name: "+filteredDep[0].departmentName}/>
                <TextArea value={depVision2} onChange={(txt)=>{
                     setDepVision2(txt.target.value)
-                }} style={{marginTop:10}} placeholder={filteredDep[0].vission}/>
+                }} style={{marginTop:10}} placeholder={"Department Vission: "+filteredDep[0].vission}/>
                <Button onClick={()=>{
           const myObj={
             department: {
@@ -374,6 +375,11 @@ export default function Department() {
                  marginBottom:10,
                  marginTop:10
                }}/>
+                 <Upload {...props2}>
+        <Button onClick={()=>{
+            setProgId(prg.programId)
+        }} style={{marginLeft:20}} icon={<UploadOutlined />}>Upload Brochure</Button>
+                </Upload>
                                 </div>
                             ))
                         )

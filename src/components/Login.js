@@ -53,9 +53,10 @@ export default function Login(props) {
                                 message.success('Logged In Successfuly!')
                                 props.setLoading(false)
                                 props.setIslogged(data.newUser)
+                                console.log(data.newUser)
                                 notification.open({
                                     message: 'Succesfully Logged In',
-                                    description:'Logged as Super-Admin',
+                                    description:`Logged In As ${data.newUser.username}`,
                                     onClick: () => {
                                       return null
                                     },

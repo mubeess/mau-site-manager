@@ -50,7 +50,7 @@ function App() {
             }} type={currIndex==0?'primary':'default'}>Home Page</Button>
         <Button onClick={()=>{
           setCurr(1)
-        }} type={currIndex==1?'primary':'default'}>Faculty</Button>
+        }} type={currIndex==1?'primary':'default'}>Academics</Button>
         <Button onClick={()=>{
           setCurr(2)
         }} type={currIndex==2?'primary':'default'}>Departments</Button>

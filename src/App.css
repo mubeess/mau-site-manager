@@ -224,4 +224,8 @@ font-weight: bold;
       width: 100px;
       animation: rotate 5s infinite reverse;
     }
-    
+    .acad_cont{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      padding: 20px;
+    }

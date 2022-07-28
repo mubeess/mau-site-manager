@@ -1,9 +1,11 @@
 import { DeleteOutlined, PlusCircleOutlined, UploadOutlined } from '@ant-design/icons'
 import { Skeleton,Input, Button, message,Modal, Select, Upload } from 'antd'
 import React, { useEffect, useState } from 'react'
+import Academics from './Academics'
 import './faculty.css'
 export default function Faculty() {
     const [facultyList,setList]=useState([])
+    const [unitList,setUnitList]=useState([])
     const [loading,setLoading]=useState(false)
     const [loading2,setLoading2]=useState(false)
     const [fName,setFname]=useState('')
@@ -22,6 +24,8 @@ export default function Faculty() {
     const [deanNameEdit,setDeanNameEdit]=useState('')
     const [deanQualEdit,setDeanQualEdit]=useState('')
     const [facDescEdit,setFacEdit]=useState('')
+    const [indUnit,setIndUnit]=useState([])
+    const [activity,setActivity]=useState('')
     const showModal = () => {
         setIsModalVisible(true);
       };
@@ -58,7 +62,7 @@ export default function Faculty() {
 
       const props = {
         name: 'profile_pic',
-        action: `https://new-modibbo-adama.herokuapp.com/admin/upload-an-image?activity=dean&facultyId=${singFac.length>0?singFac[0].facultyId:''}`,
+        action: `https://new-modibbo-adama.herokuapp.com/admin/upload-an-image?activity=dean&${activity}Id=${singFac.length>0?singFac[0][`${activity}Id`]:''}&target=${activity}Id`,
         headers: {
           authorization: 'authorization-text',
         },
@@ -66,25 +70,26 @@ export default function Faculty() {
   
         onChange(info) {
           if (info.file.status !== 'uploading') {
-            console.log(info.file, info.fileList);
+            console.log(`https://new-modibbo-adama.herokuapp.com/admin/upload-an-image?activity=dean&${activity}Id=${singFac.length>0?singFac[0][`${activity}Id`]:''}?target=${activity}Id`,"****???");
+
           }
           if (info.file.status === 'done') {
             message.success(`${info.file.name} file uploaded successfully`);
             setDeanQual('')
             setDeanName('')
             setLoading2(true)
-            fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-faculty?facultyId=${singFac.length>0?singFac[0].facultyId:''}`)
-            .then(res => {
-                res.json()
-                    .then(data => {
-                        setDeanName('')
-                        setDeanQual('')
-                        handleCancel2()
-                        setFacId('')
-                        setLoading2(false)
-                        setSinFac([data.message])
-                    })
-            })
+            // fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-faculty?facultyId=${singFac.length>0?singFac[0].facultyId:''}`)
+            // .then(res => {
+            //     res.json()
+            //         .then(data => {
+            //             setDeanName('')
+            //             setDeanQual('')
+            //             handleCancel2()
+            //             setFacId('')
+            //             setLoading2(false)
+            //             setSinFac([data.message])
+            //         })
+            // })
           } else if (info.file.status === 'error') {
             message.error(`${info.file.name} file upload failed.`);
           }
@@ -102,14 +107,14 @@ export default function Faculty() {
 
     const loadData=()=>{
         setLoading(true)
-        fetch('https://new-modibbo-adama.herokuapp.com/admin/get-all-faculties')
+        fetch('https://new-modibbo-adama.herokuapp.com/admin/get-all-faculties-schools-college')
         .then(res => {
             res.json()
                 .then(data => {
                     console.log(data)
                     setLoading(false)
                     setLoading2(false)
-                    setList(data.message)
+                    setUnitList(data.message)
                 })
         }).catch(err=>{
             setLoading(false)
@@ -121,7 +126,77 @@ export default function Faculty() {
     },[])
     return (
         <div className='faculty'>
-           <h1>Faculty List</h1>
+           <h1>Academic Units</h1>
+           <div className='acad_cont'>
+    <Select onChange={(value)=>{
+                 if (value=='sec') {
+                     return null
+                 }
+            const filtered=unitList.filter(dt=>dt.name==value)
+            setIndUnit(filtered)
+            setActivity(value)
+            setList(filtered)
+
+                //  setLoading2(true)
+                //  fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-faculty?facultyId=${value}`)
+                //  .then(res => {
+                //      res.json()
+                //          .then(facultyList => {
+                //              setLoading2(false)
+                //              setSinFac([facultyList.message])
+                //              console.log(facultyList)
+                             
+                //          })
+                //  }).catch(err=>{
+                     
+                //  })
+                }} defaultValue='sec' style={{width:'80%',marginTop:30}}>
+                <Option value="sec">Select Unit</Option>
+                {
+                    unitList.length>0&&(
+                        unitList.map((fac,ind)=>(
+                            <Option value={fac.name} key={fac.name}>{fac.name}</Option>
+                        ))
+                    )
+                }
+                
+                </Select>
+     
+
+
+
+                <Select onChange={(value)=>{
+                 if (value=='sec') {
+                     return null
+                 }
+                //  setLoading2(true)
+                 fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-faculty?eventId=${value}&activity=${activity}&target=${activity}Id`)
+                 .then(res => {
+                     res.json()
+                         .then(facultyList => {
+                            //  setLoading2(false)
+                            //  setList(facultyList.message)
+                            //  console.log([facultyList.message])
+                           
+                             
+                         })
+                 }).catch(err=>{
+                     
+                 })
+                }} defaultValue='sec' style={{width:'80%',marginTop:30}}>
+                <Option value="sec">Select Sub-Unit</Option>
+                {
+                    indUnit.length>0&&(
+                        indUnit[0].list.map((fac,ind)=>(
+                            <Option value={fac.detail.id} key={fac.detail.name}>{fac.detail.name}</Option>
+                        ))
+                    )
+                }
+                
+                </Select>
+    </div>
+
+
            <div className='facultyList'>
                {
                    loading&&(
@@ -134,7 +209,7 @@ export default function Faculty() {
                            <div className='ind' key={ind}>
                      <Input onChange={(txt)=>{
                          setFname(txt.target.value)
-                     }} placeholder={fac.facultyName}/>
+                     }} placeholder={fac.name}/>
                      <DeleteOutlined onClick={()=>{
                  const confirm=window.confirm('Are You Sure?')
                  if (confirm) {
@@ -222,13 +297,14 @@ export default function Faculty() {
 
 <Button onClick={()=>{
           const myObj={
-            faculty: {
-                facultyName:facName,
-                facultyDescription:facDesc,
+            entity: {
+                [`${activity}Name`]:facName,
+                [`${activity}Description`]:facDesc,
                 shortNote: welcomeHead
             }
           }
-          fetch('https://new-modibbo-adama.herokuapp.com/admin/add-faculty',{
+        //   console.log(myObj)
+          fetch(`https://new-modibbo-adama.herokuapp.com/admin/add-faculty?status=${activity}`,{
               method:'POST',
               headers:{
                 "Content-Type":'application/json'
@@ -263,13 +339,13 @@ export default function Faculty() {
                      return null
                  }
                  setLoading2(true)
-                 fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-faculty?facultyId=${value}`)
+                 fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-faculty?eventId=${value}&activity=${activity}&target=${activity}Id`)
                  .then(res => {
                      res.json()
                          .then(data => {
                              setLoading2(false)
                              setSinFac([data.message])
-                             console.log(data)
+                             console.log(data,'*********')
                              
                          })
                  }).catch(err=>{
@@ -277,10 +353,11 @@ export default function Faculty() {
                  })
                 }} defaultValue='sec' style={{width:'80%',marginTop:30}}>
                 <Option value="sec">Select Faculty</Option>
+                {console.log(facultyList,'|||||')}
                 {
                     facultyList.length>0&&(
-                        facultyList.map((fac,ind)=>(
-                            <Option value={fac.facultyId} key={fac.facultyName}>{fac.facultyName}</Option>
+                        facultyList[0].list.map((fac,ind)=>(
+                            <Option value={fac.detail.id} key={fac.detail.name}>{fac.detail.name}</Option>
                         ))
                     )
                 }
@@ -326,7 +403,7 @@ export default function Faculty() {
                             }} placeholder={`Name: ${singFac[0].dean.name}`} value={deanNameEdit} onChange={(txt)=>{
                                 setDeanNameEdit(txt.target.value)
                             }}/>
-                            <Input placeholder={`Qualifications: ${singFac[0].dean.qualification.map(ql=>ql+',')}`} value={deanQualEdit} onChange={(txt)=>{
+                            <Input placeholder={`Email: ${singFac[0].dean.mail?singFac[0].dean.mail:''}`} value={deanQualEdit} onChange={(txt)=>{
                                 setDeanQualEdit(txt.target.value)
                             }}/>
                             <Button onClick={()=>{
@@ -442,10 +519,10 @@ export default function Faculty() {
                     )
                 }
 
-                <h4>Faculty Description</h4>
+                <h4>{activity} Description</h4>
                 <TextArea onChange={(txt)=>{
                     setFacEdit(txt.target.value)
-                }} value={facDescEdit} placeholder={singFac[0].facultyDescription}/>
+                }} value={facDescEdit} placeholder={singFac[0][`${activity}Description`]}/>
                 <Button onClick={()=>{
                                 const myObj={
                                     faculty: {
@@ -508,18 +585,17 @@ export default function Faculty() {
          }} placeholder='Enter Dean Name'/>
          <Input value={deanQual} onChange={(txt)=>{
              setDeanQual(txt.target.value)
-         }} placeholder='Enter Qualifications'/>
+         }} placeholder='Enter Mail'/>
          <Button onClick={()=>{
              const newQual=deanQual.split(',')
              const myObj={
                 dean: {
                     name: deanName,
-                    qualification: newQual,
-                    message: ""
-                },
-                facultyId: singFac[0].facultyId
+                    message: "",
+                    mail:deanQual
+                }
              }
-             fetch('https://new-modibbo-adama.herokuapp.com/admin/add-dean',{
+             fetch(`https://new-modibbo-adama.herokuapp.com/admin/add-dean?activity=${activity}&target=${activity}Id&entityId=${singFac[0][`${activity}Id`]}`,{
                 method:'PUT',
                 headers:{
                   "Content-Type":'application/json'
@@ -530,7 +606,7 @@ export default function Faculty() {
                   res.json()
                   .then(data=>{
                     setFacId(data.result.facultyId)
-                    message.success('Upload Dean Image')
+                    message.success('Added Dean')
                    
                     
                    

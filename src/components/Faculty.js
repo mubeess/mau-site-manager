@@ -2,6 +2,7 @@ import { DeleteOutlined, PlusCircleOutlined, UploadOutlined } from '@ant-design/
 import { Skeleton,Input, Button, message,Modal, Select, Upload } from 'antd'
 import React, { useEffect, useState } from 'react'
 import Academics from './Academics'
+import Department from './Department'
 import './faculty.css'
 export default function Faculty() {
     const [facultyList,setList]=useState([])
@@ -291,7 +292,7 @@ export default function Faculty() {
             <Input  onChange={(txt)=>{
                 setWelcome(txt.target.value)
             }} placeholder='Welcome Header'/>
-            <TextArea  onChange={(txt)=>{
+            <TextArea rows={8}  onChange={(txt)=>{
                 setDesc(txt.target.value)
             }} placeholder='Enter Faculty Description'/>
 
@@ -398,9 +399,11 @@ export default function Faculty() {
 </Upload>
                                 </>
                             )}
-                            <Input style={{
+                            <Input
+                            placeholder={singFac.length?singFac[0].dean.name:''}
+                            style={{
                                 marginBottom:10
-                            }} placeholder={`Name: ${singFac[0].dean.name}`} value={deanNameEdit} onChange={(txt)=>{
+                            }} value={deanNameEdit} onChange={(txt)=>{
                                 setDeanNameEdit(txt.target.value)
                             }}/>
                             <Input placeholder={`Email: ${singFac[0].dean.mail?singFac[0].dean.mail:''}`} value={deanQualEdit} onChange={(txt)=>{
@@ -520,7 +523,7 @@ export default function Faculty() {
                 }
 
                 <h4>{activity} Description</h4>
-                <TextArea onChange={(txt)=>{
+                <TextArea rows={8} onChange={(txt)=>{
                     setFacEdit(txt.target.value)
                 }} value={facDescEdit} placeholder={singFac[0][`${activity}Description`]}/>
                 <Button onClick={()=>{
@@ -619,6 +622,10 @@ export default function Faculty() {
 </Upload>
 
            </Modal>
+
+
+
+    {/* <Department/> */}
         </div>
     )
 }

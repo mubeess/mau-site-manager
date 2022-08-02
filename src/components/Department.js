@@ -11,6 +11,7 @@ export default function Department() {
     const [isModalVisible2, setIsModalVisible2] = useState(false);
     const [depName,setDepName]=useState('')
     const [depVision,setDepVision]=useState('')
+    const [depMision,setDepMision]=useState('')
     const [facIdAdd,setFacIdAdd]=useState('sec')
     const [filteredDep,setFilteredDep]=useState([])
     const [facList,setFacList]=useState([])
@@ -31,6 +32,9 @@ export default function Department() {
     const [depNameEdit,setDepNameEdit]=useState('')
     const [depVision2,setDepVision2]=useState('')
     const [progId,setProgId]=useState('')
+    const [ManiFacList,setMain]=useState([])
+    const [activity,setActivity]=useState('sec')
+    const [activityId,setActivityId]=useState('')
 
 
     const props = {
@@ -148,11 +152,12 @@ export default function Department() {
     
       const loadFaculty=()=>{
         setLoading(true)
-        fetch('https://new-modibbo-adama.herokuapp.com/admin/get-all-faculties')
+        fetch('https://new-modibbo-adama.herokuapp.com/admin/get-all-faculties-schools-college')
         .then(res => {
             res.json()
                 .then(data => {
                     setLoading(false)
+                    console.log(data,"++++++")
                     setFacList(data.message)
                 })
         }).catch(err=>{
@@ -167,7 +172,7 @@ export default function Department() {
         .then(res => {
             res.json()
                 .then(data => {
-                    console.log(data)
+                   
                     setDepList(data.message)
                     loadFaculty()
                 })
@@ -196,7 +201,7 @@ export default function Department() {
                 {
                     depList.length>0&&(
                         depList.map((fac,ind)=>(
-                            <Option value={fac.departmentId} key={fac.departmentName}>{fac.departmentName}</Option>
+                            <Option value={fac.departmentId} key={fac.departmentId}>{fac.departmentName}</Option>
                         ))
                     )
                 }
@@ -713,15 +718,38 @@ export default function Department() {
              <TextArea value={depVision} onChange={(txt)=>{
                  setDepVision(txt.target.value)
              }} style={{marginTop:10}} placeholder='Department Vision'/>
-             <Select value={facIdAdd} onChange={(value)=>{
+              <TextArea value={depMision} onChange={(txt)=>{
+                 setDepMision(txt.target.value)
+                 
+             }} style={{marginTop:10}} placeholder='Department Mission'/>
+             <Select value={activity} onChange={(value)=>{
+                const filtered=facList.filter(fac=>fac.name==value)
+                setMain(filtered[0].list)
+                setActivity(filtered[0].name)
+               
                 
-                setFacIdAdd(value)
+                
                 }} defaultValue='sec' style={{marginTop:10,width:'100%'}}>
-                <Option value="sec">Select Faculty</Option>
+                <Option value="sec">Select Unit</Option>
                 {
                     facList.length>0&&(
                         facList.map((fac,ind)=>(
-                            <Option value={fac.facultyId} key={fac.facultyName}>{fac.facultyName}</Option>
+                            <Option value={fac.facultyId} key={fac.name}>{fac.name}</Option>
+                        ))
+                    )
+                }
+                
+                </Select>
+
+                <Select value={activityId} onChange={(value)=>{
+                setActivityId(value)
+                
+                }} defaultValue='sec' style={{marginTop:10,width:'100%'}}>
+                <Option value="sec">Select {activity}</Option>
+                {
+                    ManiFacList.length>0&&(
+                        ManiFacList.map((fac,ind)=>(
+                            <Option value={fac.detail.id} key={fac.detail.name}>{fac.detail.name}</Option>
                         ))
                     )
                 }
@@ -734,12 +762,11 @@ export default function Department() {
             department: {
                 departmentName: depName,
                 vission: depVision,
-                mission: ""
-            },
-            facultyId: facIdAdd
+                mission: depMision
+            }
           }
           console.log(myObj)
-          fetch('https://new-modibbo-adama.herokuapp.com/admin/add-department',{
+          fetch(`https://new-modibbo-adama.herokuapp.com/admin/add-department?eventId=${activityId}&activity=${activity}&target=${activity}Id`,{
               method:'PUT',
               headers:{
                 "Content-Type":'application/json'
@@ -750,7 +777,7 @@ export default function Department() {
                 res.json()
                 .then(data=>{
                  message.success('Added Succesfuly')
-                 console.log(data)
+                 loadData()
                    
                 })
             })

@@ -63,7 +63,7 @@ export default function Faculty() {
 
       const props = {
         name: 'profile_pic',
-        action: `https://new-modibbo-adama.herokuapp.com/admin/upload-an-image?activity=dean&${activity}Id=${singFac.length>0?singFac[0][`${activity}Id`]:''}&target=${activity}Id`,
+        action: `https://new-modibbo-adama.herokuapp.com/admin/upload-an-image?subActivity=${activity}&activity=dean&${activity}Id=${singFac.length>0?singFac[0][`${activity}Id`]:''}&target=${activity}Id`,
         headers: {
           authorization: 'authorization-text',
         },
@@ -77,8 +77,9 @@ export default function Faculty() {
           if (info.file.status === 'done') {
             message.success(`${info.file.name} file uploaded successfully`);
             setDeanQual('')
-            setDeanName('')
+            setDeanName('') 
             setLoading2(true)
+            console.log(`https://new-modibbo-adama.herokuapp.com/admin/upload-an-image?subActivity=${activity}activity=dean&${activity}Id=${singFac.length>0?singFac[0][`${activity}Id`]:''}&target=${activity}Id`)
             // fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-faculty?facultyId=${singFac.length>0?singFac[0].facultyId:''}`)
             // .then(res => {
             //     res.json()
@@ -354,7 +355,7 @@ export default function Faculty() {
                  })
                 }} defaultValue='sec' style={{width:'80%',marginTop:30}}>
                 <Option value="sec">Select Faculty</Option>
-                {console.log(facultyList,'|||||')}
+ 
                 {
                     facultyList.length>0&&(
                         facultyList[0].list.map((fac,ind)=>(
@@ -528,14 +529,14 @@ export default function Faculty() {
                 }} value={facDescEdit} placeholder={singFac[0][`${activity}Description`]}/>
                 <Button onClick={()=>{
                                 const myObj={
-                                    faculty: {
-                                        facultyDescription:facDescEdit 
+                                    newData: {
+                                        [`${activity}Description`]:facDescEdit 
                                     }
                                 }
                                setLoading2(true)
                                setLoading(true)
 
-                                fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-faculty?facultyId=${singFac[0].facultyId}`,{
+                                fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-faculty?entityId=${singFac[0].facultyId}&activity=${activity}&target=${activity}Id`,{
                                     method:'PUT',
                                     headers:{
                                     "Content-Type":'application/json'
@@ -545,21 +546,10 @@ export default function Faculty() {
                                 .then(res=>{
                                     res.json()
                                     .then(data=>{
-                                        fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-faculty?facultyId=${singFac[0].facultyId}`)
-                                        .then(res => {
-                                            res.json()
-                                                .then(data => {
-                                                    
-                                                    setSinFac([data.message])
-                                                    loadData()
-                                                    
-                                                    
-                                                })
-                                        }).catch(err=>{
-                                            
-                                        })
-                                        console.log(data)
-                                    setFname('')
+                                        
+                                        loadData()
+                                        
+                                    
                                         message.success('successfuly edited!')
                                     })
                                 })

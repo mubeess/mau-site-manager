@@ -18,8 +18,10 @@ export default function Department() {
     const [hodName,setHodName]=useState('')
     const [hodQual,setHodQual]=useState('')
     const [staffName,setStaffName]=useState('')
-    const [staffQual,setStaffQual]=useState('')
+    const [rank,setStaffRank]=useState('')
     const [staffMajor,setStaffMajor]=useState('')
+    const [staffMail,setStaffMail]=useState('')
+    const [staffId,setStaffId]=useState('')
     const [staffName2,setStaffName2]=useState('')
     const [staffQual2,setStaffQual2]=useState('')
     const [staffMajor2,setStaffMajor2]=useState('')
@@ -39,7 +41,7 @@ export default function Department() {
 
     const props = {
         name: 'profile_pic',
-        action: `https://new-modibbo-adama.herokuapp.com/admin/upload-an-image?activity=hod&departmentId=${filteredDep.length>0?filteredDep[0].departmentId:''}`,
+        action: `https://new-modibbo-adama.herokuapp.com/admin/upload-an-image?activity=hod&departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`,
         headers: {
           authorization: 'authorization-text',
         },
@@ -52,7 +54,7 @@ export default function Department() {
           if (info.file.status === 'done') {
             message.success(`${info.file.name} file uploaded successfully`);
             setLoading(true)
-            fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].departmentId:''}`)
+            fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`)
             .then(res => {
                 res.json()
                     .then(data => {
@@ -81,7 +83,7 @@ export default function Department() {
 
       const props2 = {
         name: 'file',
-        action: `https://new-modibbo-adama.herokuapp.com/admin/add-program-brochure?programId=${progId}&departmentId=${filteredDep.length>0?filteredDep[0].departmentId:''}`,
+        action: `https://new-modibbo-adama.herokuapp.com/admin/add-program-brochure?programId=${progId}&departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`,
         headers: {
           authorization: 'authorization-text',
         },
@@ -94,7 +96,7 @@ export default function Department() {
           if (info.file.status === 'done') {
             message.success(`${info.file.name} file uploaded successfully`);
             setLoading(true)
-            fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].departmentId:''}`)
+            fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`)
             .then(res => {
                 res.json()
                     .then(data => {
@@ -172,7 +174,7 @@ export default function Department() {
         .then(res => {
             res.json()
                 .then(data => {
-                   
+                   console.log(data,'dep')
                     setDepList(data.message)
                     loadFaculty()
                 })
@@ -193,15 +195,15 @@ export default function Department() {
             <div className='depList'>
             <div style={{backgroundColor:'#f9f9f9'}} className='addStaff'>
             <Select onChange={(value)=>{
-                const filteredDepList=depList.filter(dep=>dep.departmentId==value)
+                const filteredDepList=depList.filter(dep=>dep.department.departmentId==value)
                 setFilteredDep(filteredDepList)
                 console.log(facList,filteredDep)
-                }} defaultValue='sec' style={{marginTop:10,width:'100%'}}>
+             }} defaultValue='sec' style={{marginTop:10,width:'100%'}}>
                 <Option value="sec">Select Department</Option>
                 {
                     depList.length>0&&(
                         depList.map((fac,ind)=>(
-                            <Option value={fac.departmentId} key={fac.departmentId}>{fac.departmentName}</Option>
+                            <Option value={fac.department.departmentId} key={fac.department.departmentId}>{fac.department.departmentName}</Option>
                         ))
                     )
                 }
@@ -213,19 +215,19 @@ export default function Department() {
                      <>
                 <Input value={depNameEdit} onChange={(txt)=>{
                     setDepNameEdit(txt.target.value)
-                }} placeholder={"Department Name: "+filteredDep[0].departmentName}/>
+                }} placeholder={"Department Name: "+filteredDep[0].department.departmentName}/>
                <TextArea value={depVision2} onChange={(txt)=>{
                     setDepVision2(txt.target.value)
-                }} style={{marginTop:10}} placeholder={"Department Vission: "+filteredDep[0].vission}/>
+                }} style={{marginTop:10}} placeholder={"Department Vission: "+filteredDep[0].department.vission}/>
                <Button onClick={()=>{
           const myObj={
             department: {
-                departmentName:depNameEdit==''?filteredDep[0].departmentName:depNameEdit,
-                vission:depVision2==''?filteredDep[0].vission:depVision2,
+                departmentName:depNameEdit==''?filteredDep[0].department.departmentName:depNameEdit,
+                vission:depVision2==''?filteredDep[0].department.vission:depVision2,
                 mission:''
             }
           }
-          fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-department?departmentId=${filteredDep[0].departmentId}`,{
+          fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-department?departmentId=${filteredDep[0].department.departmentId}`,{
               method:'PUT',
               headers:{
                 "Content-Type":'application/json'
@@ -235,7 +237,7 @@ export default function Department() {
             .then(res=>{
                 res.json()
                 .then(data=>{
-                    fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].departmentId:''}`)
+                    fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`)
                                         .then(res => {
                                             res.json()
                                                 .then(data => {
@@ -291,14 +293,14 @@ export default function Department() {
                     <div className='depProgram'>
                     <h2>Department Programs</h2>
                     {
-                        filteredDep[0].programs.length==0&&(
+                        filteredDep[0].department.programs.length==0&&(
                             <h4>No Programs Added!!</h4>
                         )
                     }
                     <div className='addStaff'>
                     {
-                        filteredDep[0].programs.length>0&&(
-                            filteredDep[0].programs.map((prg)=>(
+                        filteredDep[0].department.programs.length>0&&(
+                            filteredDep[0].department.programs.map((prg)=>(
                                 <div key={prg.name} className='indiProgram'>
                                 <Input value={programName2} onChange={(txt)=>{
                                     setProgName2(txt.target.value)
@@ -319,7 +321,7 @@ export default function Department() {
             }
           }
           console.log(myObj)
-          fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-department-program?programId=${prg.programId}&departmentId=${filteredDep[0].departmentId}`,{
+          fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-department-program?programId=${prg.programId}&departmentId=${filteredDep[0].department.departmentId}`,{
               method:'PUT',
               headers:{
                 "Content-Type":'application/json'
@@ -329,7 +331,7 @@ export default function Department() {
             .then(res=>{
                 res.json()
                 .then(data=>{
-                    fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].departmentId:''}`)
+                    fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`)
                                         .then(res => {
                                             res.json()
                                                 .then(data => {
@@ -354,7 +356,7 @@ export default function Department() {
                  const confirm=window.confirm('Are You Sure?')
                  if (confirm) {
                
-                  fetch(`https://new-modibbo-adama.herokuapp.com/admin/remove-department-program?departmentId=${filteredDep[0].departmentId}&programId=${prg.programId}`,{
+                  fetch(`https://new-modibbo-adama.herokuapp.com/admin/remove-department-program?departmentId=${filteredDep[0].department.departmentId}&programId=${prg.programId}`,{
                     method:'PUT',
                     headers:{
                       "Content-Type":'application/json'
@@ -410,7 +412,7 @@ export default function Department() {
                                         admissionRequirement:myNewObj,
                                         mission:programMission
                                     },
-                                    departmentId:filteredDep[0].departmentId
+                                    departmentId:filteredDep[0].department.departmentId
                                 }
                               console.log(myObj)
 
@@ -424,7 +426,7 @@ export default function Department() {
                                 .then(res=>{
                                     res.json()
                                     .then(data=>{
-                                        fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].departmentId:''}`)
+                                        fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`)
                                         .then(res => {
                                             res.json()
                                                 .then(data => {
@@ -461,7 +463,7 @@ export default function Department() {
                         <>
                          <h4>Hod's Details</h4>
                         {
-                            filteredDep[0].hod==null&&(
+                            filteredDep[0].department.hod==null&&(
                                 <>
                                 <h2>No Hod Data!</h2>
                  <PlusCircleOutlined onClick={()=>{
@@ -476,29 +478,29 @@ export default function Department() {
                             )
                         }
                     {
-                        filteredDep[0].hod!=null&&(
+                        filteredDep[0].department.hod!=null&&(
                         <>
-                         <img src={filteredDep[0].hod.image}/>
+                         <img src={filteredDep[0].department.hod.image}/>
                          <Upload  {...props}>
                  <Button type='primary' style={{marginTop:10}} icon={<UploadOutlined />}>Change Hod's Image</Button>
                     </Upload>
                     <Input style={{marginTop:10}} value={hodName} onChange={(txt)=>{
                  setHodName(txt.target.value)
-             }} placeholder={"Name: "+filteredDep[0].hod.name}/>
+             }} placeholder={"Name: "+filteredDep[0].department.hod.name}/>
                     <Input style={{marginTop:10}} value={hodQual} onChange={(txt)=>{
                  setHodQual(txt.target.value)
-             }} placeholder={"Qualifications: "+filteredDep[0].hod.qualification.map(ql=>ql+', ')}/>
+             }} placeholder={"Qualifications: "+filteredDep[0].department.hod.qualification.map(ql=>ql+', ')}/>
              <Button style={{marginTop:10}} onClick={()=>{
                           const myNewObj=hodQual.split(',')
                                 const myObj={
                                     hod: {
-                                        name:hodName==''?filteredDep[0].hod.name:hodName,
-                                        qualification:hodQual==''?filteredDep[0].hod.qualification:myNewObj
+                                        name:hodName==''?filteredDep[0].department.hod.name:hodName,
+                                        qualification:hodQual==''?filteredDep[0].department.hod.qualification:myNewObj
                                     }
                                 }
                               
 
-                                fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-hod?departmentId=${filteredDep.length>0?filteredDep[0].departmentId:''}`,{
+                                fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-hod?departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`,{
                                     method:'PUT',
                                     headers:{
                                     "Content-Type":'application/json'
@@ -508,7 +510,7 @@ export default function Department() {
                                 .then(res=>{
                                     res.json()
                                     .then(data=>{
-                                        fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].departmentId:''}`)
+                                        fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`)
                                         .then(res => {
                                             res.json()
                                                 .then(data => {
@@ -541,21 +543,21 @@ export default function Department() {
                         <>
                          <h4 style={{marginTop:10}}>Staff List</h4>
                         {
-                            filteredDep[0].staffList.length==0&&(
+                            filteredDep[0].department.staffList.length==0&&(
                                 <h2>No Staff Added Yet!!</h2>
                             )
                         }
 
                        {
-                           filteredDep[0].staffList.length>0&&(
-                               filteredDep[0].staffList.map((stf,ind)=>(
+                           filteredDep[0].department.staffList.length>0&&(
+                               filteredDep[0].department.staffList.map((stf,ind)=>(
                                 <div className='indiStaff'>
                                 <Input onChange={(txt)=>{
                         setStaffName2(txt.target.value)
                     }} placeholder={'Name: '+stf.name}/> 
                                 <Input onChange={(txt)=>{
                         setStaffQual2(txt.target.value)
-                    }} placeholder={'Qualificaions: '+stf.qualification.map(ql=>ql+', ')}/> 
+                    }} placeholder={'rank: '+stf.rank}/> 
                                 <Input  onChange={(txt)=>{
                         setStaffMajor2(txt.target.value)
                     }} placeholder={'Major: '+stf.major}/>
@@ -569,7 +571,7 @@ export default function Department() {
             }
           }
           console.log(myObj)
-          fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-department-staff?departmentId=${filteredDep[0].departmentId}&staffId=${stf.staffId}`,{
+          fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-department-staff?departmentId=${filteredDep[0].department.departmentId}&staffId=${stf.staffId}`,{
               method:'PUT',
               headers:{
                 "Content-Type":'application/json'
@@ -579,19 +581,8 @@ export default function Department() {
             .then(res=>{
                 res.json()
                 .then(data=>{
-                
-                    fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].departmentId:''}`)
-                                        .then(res => {
-                                            res.json()
-                                                .then(data => {
-                                                   setStaffMajor2('')
-                                                   setStaffName2('')
-                                                   setStaffQual2('')
-                                                    setFilteredDep(data.message)
-                                                    message.success('successfuly added!')
-                                                   
-                                                })
-                                        })
+                message.success('New Staff Addedd')
+                loadData()
                    
                 })
             })
@@ -605,7 +596,7 @@ export default function Department() {
                  const confirm=window.confirm('Are You Sure?')
                  if (confirm) {
                
-                  fetch(`https://new-modibbo-adama.herokuapp.com/admin/remove-department-staff?departmentId=${filteredDep[0].departmentId}&staffId=${stf.staffId}`,{
+                  fetch(`https://new-modibbo-adama.herokuapp.com/admin/remove-department-staff?departmentId=${filteredDep[0].department.departmentId}&staffId=${stf.staffId}`,{
                     method:'PUT',
                     headers:{
                       "Content-Type":'application/json'
@@ -642,24 +633,32 @@ export default function Department() {
                     <Input value={staffName} onChange={(txt)=>{
                         setStaffName(txt.target.value)
                     }} placeholder='New Staff Name'/>
-                    <Input value={staffQual} onChange={(txt)=>{
-                        setStaffQual(txt.target.value)
-                    }} placeholder='New Staff Qualifications'/>
+                    <Input value={rank} onChange={(txt)=>{
+                        setStaffRank(txt.target.value)
+                    }} placeholder='New Staff Rank'/>
                     <Input value={staffMajor} onChange={(txt)=>{
                         setStaffMajor(txt.target.value)
                     }} placeholder='New Staff Major'/>
+                       <Input value={staffMail} onChange={(txt)=>{
+                        setStaffMail(txt.target.value)
+                    }} placeholder='New Staff Email'/>
+                    <Input value={staffId} onChange={(txt)=>{
+                        setStaffId(txt.target.value)
+                    }} placeholder='New Staff Id'/>
                     <Button onClick={()=>{
-        const processed=staffQual.split(',')
+       
           const myObj={
             staff: {
                 name:staffName,
-                qualification:processed,
-                major:staffMajor
+                rank:rank,
+                major:staffMajor,
+                mail:staffMail,
+                staffId
             },
-            departmentId:filteredDep[0].departmentId
+            departmentId:filteredDep[0].department.departmentId
           }
           console.log(myObj)
-          fetch('https://new-modibbo-adama.herokuapp.com/admin/add-department-staff',{
+          fetch(`https://new-modibbo-adama.herokuapp.com/admin/add-department-staff?activity=${filteredDep.length>0?Object.entries(filteredDep[0]).filter(en=>en[0]!=='department')[0][0].split('Name')[0]:''}&entityId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`,{
               method:'PUT',
               headers:{
                 "Content-Type":'application/json'
@@ -670,18 +669,8 @@ export default function Department() {
                 res.json()
                 .then(data=>{
                 
-                    fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].departmentId:''}`)
-                                        .then(res => {
-                                            res.json()
-                                                .then(data => {
-                                                   setStaffMajor('')
-                                                   setStaffName('')
-                                                   setStaffQual('')
-                                                    setFilteredDep(data.message)
-                                                    message.success('successfuly added!')
-                                                   
-                                                })
-                                        })
+                    message.success('New Staff Addedd')
+                    loadData()
                    
                 })
             })
@@ -808,9 +797,11 @@ export default function Department() {
                 name:hodName,
                 qualification:processed
             },
-            departmentId:filteredDep[0].departmentId
+            departmentId:filteredDep[0].department.departmentId,
+            activity:Object.entries(filteredDep[0]).filter(en=>en[0]!=='department')[0][0].split('Name')[0]
           }
-          console.log(myObj)
+          
+          
           fetch('https://new-modibbo-adama.herokuapp.com/admin/add-hod',{
               method:'PUT',
               headers:{

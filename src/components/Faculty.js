@@ -536,7 +536,7 @@ export default function Faculty() {
                                setLoading2(true)
                                setLoading(true)
 
-                                fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-faculty?entityId=${singFac[0].facultyId}&activity=${activity}&target=${activity}Id`,{
+                                fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-faculty?entityId=${singFac[0][`${activity}Id`]}&activity=${activity}&target=${activity}Id`,{
                                     method:'PUT',
                                     headers:{
                                     "Content-Type":'application/json'
@@ -548,8 +548,8 @@ export default function Faculty() {
                                     .then(data=>{
                                         
                                         loadData()
-                                        
-                                    
+                                        console.log(data)
+                                        setFacEdit('')
                                         message.success('successfuly edited!')
                                     })
                                 })

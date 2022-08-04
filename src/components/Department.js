@@ -27,6 +27,9 @@ export default function Department() {
     const [staffMajor2,setStaffMajor2]=useState('')
     const [programName,setProgName]=useState('')
     const [programMission,setProgMission]=useState('')
+    const [programVission,setProgVission]=useState('')
+    const [programType,setProgramType]=useState('sec')
+    
     const [progReq,setProgReq]=useState('')
     const [programName2,setProgName2]=useState('')
     const [programMission2,setProgMission2]=useState('')
@@ -401,22 +404,43 @@ export default function Department() {
                     <Input value={programMission} onChange={(txt)=>{
                         setProgMission(txt.target.value)
                     }} placeholder='Program Mission'/>
+                     <Input value={programVission} onChange={(txt)=>{
+                        setProgVission(txt.target.value)
+                    }} placeholder='Program Vision'/>
                     <TextArea value={progReq} onChange={(txt)=>{
                         setProgReq(txt.target.value)
                     }} placeholder='Admission Requirements'/>
+
+                    
+           <Select value={programType} onChange={(value)=>{
+              setProgramType(value) 
+             }} defaultValue='sec' style={{marginTop:10,width:'100%'}}>
+                <Option value="sec">Select Program Type</Option>
+                <Option value="undergraduate">Undergraduate</Option>
+                <Option value="postgraduate">Postgraduate</Option>
+                
+          </Select>
+
+
+
+
+
+
                     <Button onClick={()=>{
                           const myNewObj=progReq.split(',')
                                 const myObj={
                                     program: {
                                         name:programName,
                                         admissionRequirement:myNewObj,
-                                        mission:programMission
+                                        mission:programMission,
+                                        vission:programVission,
+                                        type:programType
                                     },
                                     departmentId:filteredDep[0].department.departmentId
                                 }
                               console.log(myObj)
 
-                                fetch(`https://new-modibbo-adama.herokuapp.com/admin/add-department-program`,{
+                                fetch(`https://new-modibbo-adama.herokuapp.com/admin/add-department-program?activity=${filteredDep.length>0?Object.entries(filteredDep[0]).filter(en=>en[0]!=='department')[0][0].split('Name')[0]:''}&entityId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`,{
                                     method:'PUT',
                                     headers:{
                                     "Content-Type":'application/json'
@@ -426,18 +450,12 @@ export default function Department() {
                                 .then(res=>{
                                     res.json()
                                     .then(data=>{
-                                        fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`)
-                                        .then(res => {
-                                            res.json()
-                                                .then(data => {
-                                                    setProgReq('')
-                                                    setProgName('')
-                                                    setProgMission('')
-                                                    setFilteredDep(data.message)
-                                                    message.success('successfuly added!')
-                                                   
-                                                })
-                                        })
+                                        loadData()
+                                        setProgReq('')
+                                        setProgName('')
+                                        setProgMission('')
+                                        setProgVission('')
+                                        message.success('successfuly added!')
                                         
                                    
                                        

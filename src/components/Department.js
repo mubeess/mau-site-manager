@@ -16,7 +16,7 @@ export default function Department() {
     const [filteredDep,setFilteredDep]=useState([])
     const [facList,setFacList]=useState([])
     const [hodName,setHodName]=useState('')
-    const [hodQual,setHodQual]=useState('')
+    const [hodMail,setHodMail]=useState('')
     const [staffName,setStaffName]=useState('')
     const [rank,setStaffRank]=useState('')
     const [staffMajor,setStaffMajor]=useState('')
@@ -44,7 +44,7 @@ export default function Department() {
 
     const props = {
         name: 'profile_pic',
-        action: `https://new-modibbo-adama.herokuapp.com/admin/upload-an-image?activity=hod&departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`,
+        action: `https://new-modibbo-adama.herokuapp.com/admin/upload-an-image?activity=hod&departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}&subActivity=${filteredDep.length>0?filteredDep[0].activity:''}`,
         headers: {
           authorization: 'authorization-text',
         },
@@ -57,16 +57,7 @@ export default function Department() {
           if (info.file.status === 'done') {
             message.success(`${info.file.name} file uploaded successfully`);
             setLoading(true)
-            fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`)
-            .then(res => {
-                res.json()
-                    .then(data => {
-                        setHodQual('')
-                        setHodName('')
-                        setFilteredDep(data.message)
-                       
-                    })
-            })
+            loadData()
           } else if (info.file.status === 'error') {
             message.error(`${info.file.name} file upload failed.`);
           }
@@ -86,7 +77,7 @@ export default function Department() {
 
       const props2 = {
         name: 'file',
-        action: `https://new-modibbo-adama.herokuapp.com/admin/add-program-brochure?programId=${progId}&departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`,
+        action: `https://new-modibbo-adama.herokuapp.com/admin/add-program-brochure?programId=${progId}&departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}&activity=${filteredDep.length>0?filteredDep[0].activity:''}`,
         headers: {
           authorization: 'authorization-text',
         },
@@ -99,16 +90,7 @@ export default function Department() {
           if (info.file.status === 'done') {
             message.success(`${info.file.name} file uploaded successfully`);
             setLoading(true)
-            fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`)
-            .then(res => {
-                res.json()
-                    .then(data => {
-                        setHodQual('')
-                        setHodName('')
-                        setFilteredDep(data.message)
-                       
-                    })
-            })
+            loadData()
           } else if (info.file.status === 'error') {
             message.error(`${info.file.name} file upload failed.`);
           }
@@ -505,15 +487,15 @@ export default function Department() {
                     <Input style={{marginTop:10}} value={hodName} onChange={(txt)=>{
                  setHodName(txt.target.value)
              }} placeholder={"Name: "+filteredDep[0].department.hod.name}/>
-                    <Input style={{marginTop:10}} value={hodQual} onChange={(txt)=>{
-                 setHodQual(txt.target.value)
-             }} placeholder={"Qualifications: "+filteredDep[0].department.hod.qualification.map(ql=>ql+', ')}/>
+                    <Input style={{marginTop:10}} value={hodMail} onChange={(txt)=>{
+                 setHodMail(txt.target.value)
+             }} placeholder={"E-mail: "+filteredDep[0].department.hod.mail}/>
              <Button style={{marginTop:10}} onClick={()=>{
-                          const myNewObj=hodQual.split(',')
+                       
                                 const myObj={
                                     hod: {
                                         name:hodName==''?filteredDep[0].department.hod.name:hodName,
-                                        qualification:hodQual==''?filteredDep[0].department.hod.qualification:myNewObj
+                                        mail:hodMail==''?filteredDep[0].department.hod.mail:hodMail
                                     }
                                 }
                               
@@ -532,7 +514,7 @@ export default function Department() {
                                         .then(res => {
                                             res.json()
                                                 .then(data => {
-                                                    setHodQual('')
+                                                    setHodMail('')
                                                     setHodName('')
                                                     setFilteredDep(data.message)
                                                     message.success('successfuly edited!')
@@ -559,6 +541,7 @@ export default function Department() {
                 {
                     filteredDep.length>0&&(
                         <>
+                        {console.log(filteredDep,"PPPPPP")}
                          <h4 style={{marginTop:10}}>Staff List</h4>
                         {
                             filteredDep[0].department.staffList.length==0&&(
@@ -802,18 +785,17 @@ export default function Department() {
              <Input value={hodName} onChange={(txt)=>{
                  setHodName(txt.target.value)
              }} placeholder={`Enter Hod's Name`}/>
-             <Input value={hodQual} onChange={(txt)=>{
-                 setHodQual(txt.target.value)
+             <Input value={hodMail} onChange={(txt)=>{
+                 setHodMail(txt.target.value)
              }} style={{marginTop:10}} placeholder='Qualifications'/>
              
              <Button style={{
                  marginTop:10
              }} onClick={()=>{
-          const processed=hodQual.split(',')
           const myObj={
             hod: {
                 name:hodName,
-                qualification:processed
+                mail:hodMail
             },
             departmentId:filteredDep[0].department.departmentId,
             activity:Object.entries(filteredDep[0]).filter(en=>en[0]!=='department')[0][0].split('Name')[0]

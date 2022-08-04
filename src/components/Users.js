@@ -29,7 +29,8 @@ export default function Users() {
         .then(res => {
             res.json()
                 .then(data => {
-                    const filtered=data.message.filter(usr=>usr.username!=userr.username)
+                    const filtered=data.message.filter(usr=>usr.username!==userr.username)
+                    console.log(data,filtered)
                     setAll(filtered)
                     
                 })
@@ -50,10 +51,10 @@ export default function Users() {
                     <div key={user.firstName} className='userCard'>
                     <div className='imgDet'>
                     {
-                        user.image!='null'?<img src={user.image} alt='user'/>:<Avatar size={64} icon={<UserOutlined />} />
+                        user.image!=='null'?<img src={user.image} alt='user'/>:<Avatar size={64} icon={<UserOutlined />} />
                     }
                  
-                   <h4>{user.role!='null'?user.role.toUpperCase():'No Role Set'}</h4>
+                   <h4>{user.role!=='null'?user.role:'No Role Set'}</h4>
                    <Rate allowHalf disabled defaultValue={user.role=='super'?4.5:2.5} />
                     </div>
                     <div className='txtDet'>

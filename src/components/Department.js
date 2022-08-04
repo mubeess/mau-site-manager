@@ -798,7 +798,7 @@ export default function Department() {
                 mail:hodMail
             },
             departmentId:filteredDep[0].department.departmentId,
-            activity:Object.entries(filteredDep[0]).filter(en=>en[0]!=='department')[0][0].split('Name')[0]
+            activity:filteredDep[0].activity
           }
           
           

@@ -23,7 +23,7 @@ export default function Faculty() {
     const {TextArea}=Input
     const {Option}=Select
     const [deanNameEdit,setDeanNameEdit]=useState('')
-    const [deanQualEdit,setDeanQualEdit]=useState('')
+    const [deanMailEdit,setDeanQualEdit]=useState('')
     const [facDescEdit,setFacEdit]=useState('')
     const [indUnit,setIndUnit]=useState([])
     const [activity,setActivity]=useState('')
@@ -407,21 +407,21 @@ export default function Faculty() {
                             }} value={deanNameEdit} onChange={(txt)=>{
                                 setDeanNameEdit(txt.target.value)
                             }}/>
-                            <Input placeholder={`Email: ${singFac[0].dean.mail?singFac[0].dean.mail:''}`} value={deanQualEdit} onChange={(txt)=>{
+                            <Input placeholder={`Email: ${singFac[0].dean.mail?singFac[0].dean.mail:''}`} value={deanMailEdit} onChange={(txt)=>{
                                 setDeanQualEdit(txt.target.value)
                             }}/>
                             <Button onClick={()=>{
-                          const myNewObj=deanQualEdit.split(',')
+                        
                                 const myObj={
                                     dean: {
                                         name:deanNameEdit==''?singFac[0].dean.name:deanNameEdit,
-                                        qualification:deanQualEdit==''?singFac[0].dean.qualification:myNewObj,
-                                        message: ""
+                                        mail:deanMailEdit==''?singFac[0].dean.mail:deanMailEdit,
+                                        
                                     }
                                 }
                                setLoading2(true)
 
-                                fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-dean?facultyId=${singFac[0].facultyId}`,{
+                                fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-dean?entityId=${singFac[0].facultyId}&target=${activity}Id&activity=${activity}`,{
                                     method:'PUT',
                                     headers:{
                                     "Content-Type":'application/json'
@@ -431,20 +431,9 @@ export default function Faculty() {
                                 .then(res=>{
                                     res.json()
                                     .then(data=>{
-                                        fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-faculty?facultyId=${singFac[0].facultyId}`)
-                                        .then(res => {
-                                            res.json()
-                                                .then(data => {
-                                                    setLoading2(false)
-                                                    setSinFac([data.message])
-                                                    
-                                                    
-                                                })
-                                        }).catch(err=>{
-                                            
-                                        })
-                                        console.log(data)
-                                    setFname('')
+                                      
+
+                                        loadData()
                                         message.success('successfuly edited!')
                                     })
                                 })

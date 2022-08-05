@@ -36,6 +36,7 @@ export default function Department() {
     const [progReq2,setProgReq2]=useState('')
     const [depNameEdit,setDepNameEdit]=useState('')
     const [depVision2,setDepVision2]=useState('')
+    const [depMision2,setDepMision2]=useState('')
     const [progId,setProgId]=useState('')
     const [ManiFacList,setMain]=useState([])
     const [activity,setActivity]=useState('sec')
@@ -201,18 +202,24 @@ export default function Department() {
                 <Input value={depNameEdit} onChange={(txt)=>{
                     setDepNameEdit(txt.target.value)
                 }} placeholder={"Department Name: "+filteredDep[0].department.departmentName}/>
-               <TextArea value={depVision2} onChange={(txt)=>{
+               <TextArea rows={6} value={depVision2} onChange={(txt)=>{
                     setDepVision2(txt.target.value)
                 }} style={{marginTop:10}} placeholder={"Department Vission: "+filteredDep[0].department.vission}/>
+
+<TextArea rows={6} value={depMision2} onChange={(txt)=>{
+                    setDepMision2(txt.target.value)
+                }} style={{marginTop:10}} placeholder={"Department Mission: "+filteredDep[0].department.mission}/>
+
+
                <Button onClick={()=>{
           const myObj={
             department: {
                 departmentName:depNameEdit==''?filteredDep[0].department.departmentName:depNameEdit,
                 vission:depVision2==''?filteredDep[0].department.vission:depVision2,
-                mission:''
+                mission:depMision2
             }
           }
-          fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-department?departmentId=${filteredDep[0].department.departmentId}`,{
+          fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-department?departmentId=${filteredDep[0].department.departmentId}&activity=${filteredDep[0].activity}`,{
               method:'PUT',
               headers:{
                 "Content-Type":'application/json'
@@ -222,18 +229,11 @@ export default function Department() {
             .then(res=>{
                 res.json()
                 .then(data=>{
-                    fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`)
-                                        .then(res => {
-                                            res.json()
-                                                .then(data => {
-                                                    setDepNameEdit('')
-                                                    setDepVision2('')
-                                                    setFilteredDep(data.message)
-                                                    loadData()
-                                                    message.success('successfuly added!')
-                                                   
-                                                })
-                                        })
+                    setDepNameEdit('')
+                    setDepVision2('')
+                    setDepMision2('')
+                    loadData()
+                    message.success('successfuly edited!')
                    
                 })
             })
@@ -493,14 +493,14 @@ export default function Department() {
              <Button style={{marginTop:10}} onClick={()=>{
                        
                                 const myObj={
-                                    hod: {
+                                    hod:{
                                         name:hodName==''?filteredDep[0].department.hod.name:hodName,
                                         mail:hodMail==''?filteredDep[0].department.hod.mail:hodMail
                                     }
                                 }
                               
 
-                                fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-hod?departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`,{
+                                fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-hod?departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}&activity=${filteredDep.length>0?filteredDep[0].activity:''}`,{
                                     method:'PUT',
                                     headers:{
                                     "Content-Type":'application/json'
@@ -510,18 +510,10 @@ export default function Department() {
                                 .then(res=>{
                                     res.json()
                                     .then(data=>{
-                                        fetch(`https://new-modibbo-adama.herokuapp.com/admin/get-single-department?departmentId=${filteredDep.length>0?filteredDep[0].department.departmentId:''}`)
-                                        .then(res => {
-                                            res.json()
-                                                .then(data => {
-                                                    setHodMail('')
-                                                    setHodName('')
-                                                    setFilteredDep(data.message)
-                                                    message.success('successfuly edited!')
-                                                   
-                                                })
-                                        })
-                                        
+                                        setHodMail('')
+                                        setHodName('')
+                                       loadData()
+                                        message.success('successfuly edited!') 
                                    
                                        
                                     })

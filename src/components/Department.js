@@ -37,6 +37,7 @@ export default function Department() {
     const [depNameEdit,setDepNameEdit]=useState('')
     const [depVision2,setDepVision2]=useState('')
     const [depMision2,setDepMision2]=useState('')
+    const [introduction,setIntro]=useState('')
     const [progId,setProgId]=useState('')
     const [ManiFacList,setMain]=useState([])
     const [activity,setActivity]=useState('sec')
@@ -209,6 +210,9 @@ export default function Department() {
 <TextArea rows={6} value={depMision2} onChange={(txt)=>{
                     setDepMision2(txt.target.value)
                 }} style={{marginTop:10}} placeholder={"Department Mission: "+filteredDep[0].department.mission}/>
+<TextArea rows={6} value={introduction} onChange={(txt)=>{
+                    setIntro(txt.target.value)
+                }} style={{marginTop:10}} placeholder={"Welcome Address: "+filteredDep[0].department.introduction}/>
 
 
                <Button onClick={()=>{
@@ -216,7 +220,8 @@ export default function Department() {
             department: {
                 departmentName:depNameEdit==''?filteredDep[0].department.departmentName:depNameEdit,
                 vission:depVision2==''?filteredDep[0].department.vission:depVision2,
-                mission:depMision2
+                mission:depMision2==''?filteredDep[0].department.mission:depMision2,
+                introduction:introduction==''?filteredDep[0].department.introduction:introduction
             }
           }
           fetch(`https://new-modibbo-adama.herokuapp.com/admin/edit-department?departmentId=${filteredDep[0].department.departmentId}&activity=${filteredDep[0].activity}`,{
